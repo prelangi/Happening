@@ -46,7 +46,7 @@ class MapViewController: UIViewController,CLLocationManagerDelegate,MKMapViewDel
         
 
         
-        
+
         
 
         
@@ -67,6 +67,7 @@ class MapViewController: UIViewController,CLLocationManagerDelegate,MKMapViewDel
                 if let objects = objects as [PFObject]! {
                     
                     for object in objects {
+
                         let annotation = MKPointAnnotation()
                         let pinName = object.objectForKey("username") as! String
                         let pinSubtitle = object.objectForKey("email") as! String
@@ -74,6 +75,7 @@ class MapViewController: UIViewController,CLLocationManagerDelegate,MKMapViewDel
                         let pinLocationPF = object.objectForKey("location") //as! PFGeoPoint
                         
                             var pinLocationCL:CLLocationCoordinate2D = CLLocationCoordinate2DMake(pinLocationPF!.latitude, pinLocationPF!.longitude)
+
                             
                             annotation.coordinate = pinLocationCL
                             annotation.title = pinName
