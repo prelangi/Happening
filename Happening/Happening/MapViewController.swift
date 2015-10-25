@@ -40,12 +40,13 @@ class MapViewController: UIViewController,CLLocationManagerDelegate,MKMapViewDel
         self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         
         //request authorization before updating localition
+
         self.locationManager.requestAlwaysAuthorization()
         self.locationManager.startUpdatingLocation()
         
 
         
-        let annotation = MKPointAnnotation()
+
         
 
         
@@ -66,12 +67,15 @@ class MapViewController: UIViewController,CLLocationManagerDelegate,MKMapViewDel
                 if let objects = objects as [PFObject]! {
                     
                     for object in objects {
+
+                        let annotation = MKPointAnnotation()
                         let pinName = object.objectForKey("username") as! String
                         let pinSubtitle = object.objectForKey("email") as! String
                         let pinSkills = object.objectForKey("mySkills") as! NSArray
-                        let pinLocationPF = object.objectForKey("location") as! PFGeoPoint
+                        let pinLocationPF = object.objectForKey("location") //as! PFGeoPoint
                         
-                            let pinLocationCL:CLLocationCoordinate2D = CLLocationCoordinate2DMake(pinLocationPF.latitude, pinLocationPF.longitude)
+                            var pinLocationCL:CLLocationCoordinate2D = CLLocationCoordinate2DMake(pinLocationPF!.latitude, pinLocationPF!.longitude)
+
                             
                             annotation.coordinate = pinLocationCL
                             annotation.title = pinName
@@ -121,12 +125,12 @@ class MapViewController: UIViewController,CLLocationManagerDelegate,MKMapViewDel
         let location = locations.last as CLLocation!
         
         let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-        let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+        let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
         
         self.mapView.setRegion(region, animated: true)
         
 //        let userGeoPoint = PFGeoPoint(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-        
+
         
     }
 
