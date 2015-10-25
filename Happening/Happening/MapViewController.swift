@@ -35,19 +35,68 @@ class MapViewController: UIViewController,CLLocationManagerDelegate,MKMapViewDel
         
         //Do any additional setup after loading the view, typically from a nib.
         //Get current location
-        locationManager = CLLocationManager()
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        self.locationManager = CLLocationManager()
+        self.locationManager.delegate = self
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         
         //request authorization before updating localition
-        locationManager.requestAlwaysAuthorization()
-        locationManager.startUpdatingLocation()
-        
+        self.locationManager.requestAlwaysAuthorization()
+        self.locationManager.startUpdatingLocation()
         
 
+        
+        let annotation = MKPointAnnotation()
+        
 
-        // Do any additional setup after loading the view.
+        
+        let query = PFUser.query()! //PFQuery(className:"User")
+        query.whereKey("mySkills", equalTo:"iOS")
+        query.whereKey("location", nearGeoPoint:(PFUser.currentUser()?.objectForKey("location"))! as! PFGeoPoint, withinKilometers: 50)
+        query.limit = 10
+        query.findObjectsInBackgroundWithBlock {
+            (objects: [PFObject]?, error: NSError?) -> Void in
+            if error == nil {
+                
+                // The find succeeded.
+                
+                print("Successfully retrieved \(objects!.count) people.")
+                
+                // Do something with the found objects
+                
+                if let objects = objects as [PFObject]! {
+                    
+                    for object in objects {
+                        let pinName = object.objectForKey("username") as! String
+                        let pinSubtitle = object.objectForKey("email") as! String
+                        let pinSkills = object.objectForKey("mySkills") as! NSArray
+                        let pinLocationPF = object.objectForKey("location") as! PFGeoPoint
+                        
+                            let pinLocationCL:CLLocationCoordinate2D = CLLocationCoordinate2DMake(pinLocationPF.latitude, pinLocationPF.longitude)
+                            
+                            annotation.coordinate = pinLocationCL
+                            annotation.title = pinName
+                            annotation.subtitle = pinSubtitle
+                            
+                            self.mapView.addAnnotation(annotation)
+                        
+                        print(object.objectForKey("location"))
+                        print(object.objectForKey("username"))
+                        
+                    
+                    }
+                
+                } else {
+                
+                // Log details of the failure
+                
+                print("Error: \(error!) \(error!.userInfo)")
+                
+                }
+            
+            }
+        }
     }
+        // Do any additional setup after loading the view.
     
     override func viewDidAppear(animated: Bool) {
         mapView.mapType = MKMapType.Standard
@@ -63,34 +112,21 @@ class MapViewController: UIViewController,CLLocationManagerDelegate,MKMapViewDel
 
     }
     
-    func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
+    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
         locationManager.stopUpdatingLocation()
     }
     
-    func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]) {
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
   
-        let location = locations.last as! CLLocation!
+        let location = locations.last as CLLocation!
         
         let center = CLLocationCoordinate2D(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
         let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
         
         self.mapView.setRegion(region, animated: true)
         
-        let userGeoPoint = PFGeoPoint(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+//        let userGeoPoint = PFGeoPoint(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
         
-        // Create a query for places
-        var query = PFQuery(className:"User")
-        // Interested in locations near user.
-        query.whereKey("location", nearGeoPoint:userGeoPoint, withinKilometers: 10)
-        // Limit what could be a lot of points.
-        query.limit = 10
-        // Final list of objects
-        do {
-            var nearbyPeople = try query.findObjects()
-            print("number of people around you ", nearbyPeople.count)
-        } catch {
-            print(error)
-        }
         
     }
 

@@ -13,6 +13,8 @@
 		C32C0EB01BDB68C7005F3A8D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C32C0EAE1BDB68C7005F3A8D /* Main.storyboard */; };
 		C32C0EB31BDB68C7005F3A8D /* Happening.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C32C0EB11BDB68C7005F3A8D /* Happening.xcdatamodeld */; };
 		C32C0EB51BDB68C7005F3A8D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C32C0EB41BDB68C7005F3A8D /* Assets.xcassets */; };
+		C3DB8BA91BDCBBA600A093A1 /* NearbyUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3DB8BA81BDCBBA600A093A1 /* NearbyUser.swift */; };
+		C3DB8BAB1BDCBF5F00A093A1 /* VCMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3DB8BAA1BDCBF5F00A093A1 /* VCMapView.swift */; };
 		CA27B9C11BDBFFA9001F3202 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA27B9C01BDBFFA9001F3202 /* TableViewCell.swift */; };
 		CA27B9D91BDC4BFA001F3202 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA27B9D81BDC4BFA001F3202 /* MapViewController.swift */; };
 		CA27B9DB1BDC5073001F3202 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA27B9DA1BDC5073001F3202 /* CoreLocation.framework */; };
@@ -31,6 +33,8 @@
 		C32C0EB21BDB68C7005F3A8D /* Happening.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Happening.xcdatamodel; sourceTree = "<group>"; };
 		C32C0EB41BDB68C7005F3A8D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C32C0EB91BDB68C7005F3A8D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C3DB8BA81BDCBBA600A093A1 /* NearbyUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NearbyUser.swift; sourceTree = "<group>"; };
+		C3DB8BAA1BDCBF5F00A093A1 /* VCMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VCMapView.swift; sourceTree = "<group>"; };
 		CA27B9C01BDBFFA9001F3202 /* TableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		CA27B9D81BDC4BFA001F3202 /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		CA27B9DA1BDC5073001F3202 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -82,6 +86,8 @@
 				C32C0EAA1BDB68C7005F3A8D /* AppDelegate.swift */,
 				C32C0EAC1BDB68C7005F3A8D /* ViewController.swift */,
 				CA27B9D81BDC4BFA001F3202 /* MapViewController.swift */,
+				C3DB8BAA1BDCBF5F00A093A1 /* VCMapView.swift */,
+				C3DB8BA81BDCBBA600A093A1 /* NearbyUser.swift */,
 				C30DE54A1BDBEDC500A89477 /* MyLogInViewController.swift */,
 				C32C0EB41BDB68C7005F3A8D /* Assets.xcassets */,
 				C32C0EAE1BDB68C7005F3A8D /* Main.storyboard */,
@@ -226,6 +232,8 @@
 				CA27B9D91BDC4BFA001F3202 /* MapViewController.swift in Sources */,
 				C32C0EAD1BDB68C7005F3A8D /* ViewController.swift in Sources */,
 				CA27B9C11BDBFFA9001F3202 /* TableViewCell.swift in Sources */,
+				C3DB8BAB1BDCBF5F00A093A1 /* VCMapView.swift in Sources */,
+				C3DB8BA91BDCBBA600A093A1 /* NearbyUser.swift in Sources */,
 				C32C0EB31BDB68C7005F3A8D /* Happening.xcdatamodeld in Sources */,
 				C32C0EAB1BDB68C7005F3A8D /* AppDelegate.swift in Sources */,
 			);
