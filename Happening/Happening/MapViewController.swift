@@ -81,12 +81,12 @@ class MapViewController: UIViewController,CLLocationManagerDelegate,MKMapViewDel
         // Create a query for places
         var query = PFQuery(className:"User")
         // Interested in locations near user.
-        query.whereKey("location", nearGeoPoint:userGeoPoint)
+        query.whereKey("location", nearGeoPoint:userGeoPoint, withinKilometers: 10)
         // Limit what could be a lot of points.
         query.limit = 10
         // Final list of objects
         do {
-            let nearbyPeople = try query.findObjects()
+            var nearbyPeople = try query.findObjects()
             print("number of people around you ", nearbyPeople.count)
         } catch {
             print(error)
