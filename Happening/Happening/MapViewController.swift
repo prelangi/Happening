@@ -31,7 +31,7 @@ class MapViewController: UIViewController,CLLocationManagerDelegate,MKMapViewDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        mapView.delegate = self
         
         //Do any additional setup after loading the view, typically from a nib.
         //Get current location
@@ -43,12 +43,6 @@ class MapViewController: UIViewController,CLLocationManagerDelegate,MKMapViewDel
 
         self.locationManager.requestAlwaysAuthorization()
         self.locationManager.startUpdatingLocation()
-        
-
-        
-
-        
-
         
         let query = PFUser.query()! //PFQuery(className:"User")
         query.whereKey("mySkills", equalTo:"iOS")
@@ -74,14 +68,14 @@ class MapViewController: UIViewController,CLLocationManagerDelegate,MKMapViewDel
                         let pinSkills = object.objectForKey("mySkills") as! NSArray
                         let pinLocationPF = object.objectForKey("location") //as! PFGeoPoint
                         
-                            var pinLocationCL:CLLocationCoordinate2D = CLLocationCoordinate2DMake(pinLocationPF!.latitude, pinLocationPF!.longitude)
+                        var pinLocationCL:CLLocationCoordinate2D = CLLocationCoordinate2DMake(pinLocationPF!.latitude, pinLocationPF!.longitude)
 
                             
-                            annotation.coordinate = pinLocationCL
-                            annotation.title = pinName
-                            annotation.subtitle = pinSubtitle
+                        annotation.coordinate = pinLocationCL
+                        annotation.title = pinName
+                        annotation.subtitle = pinSubtitle
                             
-                            self.mapView.addAnnotation(annotation)
+                        self.mapView.addAnnotation(annotation)
                         
                         print(object.objectForKey("location"))
                         print(object.objectForKey("username"))
@@ -133,6 +127,34 @@ class MapViewController: UIViewController,CLLocationManagerDelegate,MKMapViewDel
 
         
     }
+    
+
+    func mapView(mapView: MKMapView!,
+        viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+            if annotation is MKUserLocation{
+                return nil
+            }
+            
+            let reuseId = "pin"
+            
+            var pinView = mapView.dequeueReusableAnnotationViewWithIdentifier(reuseId) as? MKPinAnnotationView
+            
+            if(pinView == nil){
+                pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+                pinView!.canShowCallout = true
+                pinView!.animatesDrop = true
+                pinView!.pinColor = .Red
+                
+                let calloutButton = UIButton(type:.DetailDisclosure) as UIButton
+                pinView!.rightCalloutAccessoryView = calloutButton
+            } else {
+                pinView!.annotation = annotation
+            }
+            return pinView!
+    }
+
+
+
 
 
     
