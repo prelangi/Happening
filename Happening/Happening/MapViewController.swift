@@ -35,81 +35,70 @@ class MapViewController: UIViewController,CLLocationManagerDelegate,MKMapViewDel
         
         //Do any additional setup after loading the view, typically from a nib.
         //Get current location
-        locationManager = CLLocationManager()
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        self.locationManager = CLLocationManager()
+        self.locationManager.delegate = self
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         
         //request authorization before updating localition
-        locationManager.requestAlwaysAuthorization()
-        locationManager.startUpdatingLocation()
+
+        self.locationManager.requestAlwaysAuthorization()
+        self.locationManager.startUpdatingLocation()
         
-        // Create a query for places
-        /*print("Doing a query")
-        var query = PFQuery(className:"User")
-        // Interested in locations near user.
-        query.whereKey("username", equalTo:"prasu")
-        // Limit what could be a lot of points.
-        query.limit = 10
-        // Final list of objects
-        do {
-            let nearbyPeople = try query.findObjects()
-            print("number of people with iOS interest ", nearbyPeople.count)
-        } catch {
-            print(error)
-        }*/
+
         
         
         
+
         
-        
-        
-        
-        var query = PFUser.query()! //PFQuery(className:"User")
+        let query = PFUser.query()! //PFQuery(className:"User")
         query.whereKey("mySkills", equalTo:"iOS")
+        query.whereKey("location", nearGeoPoint:(PFUser.currentUser()?.objectForKey("location"))! as! PFGeoPoint, withinKilometers: 50)
+        query.limit = 10
         query.findObjectsInBackgroundWithBlock {
             (objects: [PFObject]?, error: NSError?) -> Void in
-            
             if error == nil {
+                
                 // The find succeeded.
-                print("Successfully retrieved \(objects!.count) scores.")
+                
+                print("Successfully retrieved \(objects!.count) people.")
+                
                 // Do something with the found objects
-                if let objects = objects as? [PFObject]! {
+                
+                if let objects = objects as [PFObject]! {
+                    
                     for object in objects {
+                        let annotation = MKPointAnnotation()
+                        let pinName = object.objectForKey("username") as! String
+                        let pinSubtitle = object.objectForKey("email") as! String
+                        let pinSkills = object.objectForKey("mySkills") as! NSArray
+                        let pinLocationPF = object.objectForKey("location") //as! PFGeoPoint
+                        
+                            var pinLocationCL:CLLocationCoordinate2D = CLLocationCoordinate2DMake(pinLocationPF!.latitude, pinLocationPF!.longitude)
+                            
+                            annotation.coordinate = pinLocationCL
+                            annotation.title = pinName
+                            annotation.subtitle = pinSubtitle
+                            
+                            self.mapView.addAnnotation(annotation)
+                        
                         print(object.objectForKey("location"))
                         print(object.objectForKey("username"))
                         
-                        var mappoint = object.objectForKey("location")
-                        
-                        if(mappoint != nil) {
-                            var annotation = MKPointAnnotation()
-                            var location:CLLocationCoordinate2D = CLLocationCoordinate2DMake(mappoint!.latitude, mappoint!.longitude)
-                            annotation.coordinate = location
-                            
-                            annotation.title = object.objectForKey("username") as! String
-                            var skills_list = object.objectForKey("mySkills")
-                            print(skills_list)
-                            
-                            //var skills_string = skills_list.joinwith
-                            
-                            annotation.subtitle = "hello" //"-".join(object.objectForKey("mySkills")) as! String
-                            print("printing annotation")
-                            self.mapView.addAnnotation(annotation)
-                            
-                        }
-                        
+                    
                     }
-                }
-            } else {
+                
+                } else {
+                
                 // Log details of the failure
+                
                 print("Error: \(error!) \(error!.userInfo)")
+                
+                }
+            
             }
         }
-        
-        
-
-
-        // Do any additional setup after loading the view.
     }
+        // Do any additional setup after loading the view.
     
     override func viewDidAppear(animated: Bool) {
         mapView.mapType = MKMapType.Standard
@@ -125,11 +114,11 @@ class MapViewController: UIViewController,CLLocationManagerDelegate,MKMapViewDel
 
     }
     
-    func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
+    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
         locationManager.stopUpdatingLocation()
     }
     
-    func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [CLLocation]) {
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
   
         let location = locations.last as CLLocation!
         
@@ -138,9 +127,8 @@ class MapViewController: UIViewController,CLLocationManagerDelegate,MKMapViewDel
         
         self.mapView.setRegion(region, animated: true)
         
-        let userGeoPoint = PFGeoPoint(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
-        
-        
+//        let userGeoPoint = PFGeoPoint(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+
         
     }
 
