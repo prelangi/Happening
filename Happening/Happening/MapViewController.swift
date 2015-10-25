@@ -43,6 +43,68 @@ class MapViewController: UIViewController,CLLocationManagerDelegate,MKMapViewDel
         locationManager.requestAlwaysAuthorization()
         locationManager.startUpdatingLocation()
         
+        // Create a query for places
+        /*print("Doing a query")
+        var query = PFQuery(className:"User")
+        // Interested in locations near user.
+        query.whereKey("username", equalTo:"prasu")
+        // Limit what could be a lot of points.
+        query.limit = 10
+        // Final list of objects
+        do {
+            let nearbyPeople = try query.findObjects()
+            print("number of people with iOS interest ", nearbyPeople.count)
+        } catch {
+            print(error)
+        }*/
+        
+        
+        
+        
+        
+        
+        
+        var query = PFUser.query()! //PFQuery(className:"User")
+        query.whereKey("mySkills", equalTo:"iOS")
+        query.findObjectsInBackgroundWithBlock {
+            (objects: [PFObject]?, error: NSError?) -> Void in
+            
+            if error == nil {
+                // The find succeeded.
+                print("Successfully retrieved \(objects!.count) scores.")
+                // Do something with the found objects
+                if let objects = objects as? [PFObject]! {
+                    for object in objects {
+                        print(object.objectForKey("location"))
+                        print(object.objectForKey("username"))
+                        
+                        var mappoint = object.objectForKey("location")
+                        
+                        if(mappoint != nil) {
+                            var annotation = MKPointAnnotation()
+                            var location:CLLocationCoordinate2D = CLLocationCoordinate2DMake(mappoint!.latitude, mappoint!.longitude)
+                            annotation.coordinate = location
+                            
+                            annotation.title = object.objectForKey("username") as! String
+                            var skills_list = object.objectForKey("mySkills")
+                            print(skills_list)
+                            
+                            //var skills_string = skills_list.joinwith
+                            
+                            annotation.subtitle = "hello" //"-".join(object.objectForKey("mySkills")) as! String
+                            print("printing annotation")
+                            self.mapView.addAnnotation(annotation)
+                            
+                        }
+                        
+                    }
+                }
+            } else {
+                // Log details of the failure
+                print("Error: \(error!) \(error!.userInfo)")
+            }
+        }
+        
         
 
 
@@ -78,19 +140,7 @@ class MapViewController: UIViewController,CLLocationManagerDelegate,MKMapViewDel
         
         let userGeoPoint = PFGeoPoint(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
         
-        // Create a query for places
-        var query = PFQuery(className:"User")
-        // Interested in locations near user.
-        query.whereKey("location", nearGeoPoint:userGeoPoint)
-        // Limit what could be a lot of points.
-        query.limit = 10
-        // Final list of objects
-        do {
-            let nearbyPeople = try query.findObjects()
-            print("number of people around you ", nearbyPeople.count)
-        } catch {
-            print(error)
-        }
+        
         
     }
 
