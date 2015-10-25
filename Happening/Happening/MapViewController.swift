@@ -9,6 +9,7 @@
 import UIKit
 import MapKit
 import CoreLocation
+import Parse
 
 
 class MapViewController: UIViewController,CLLocationManagerDelegate,MKMapViewDelegate {
@@ -57,6 +58,8 @@ class MapViewController: UIViewController,CLLocationManagerDelegate,MKMapViewDel
         
         //[mapView setCenterCoordinate:mapView.userLocation.location.coordinate animated:YES];
         //[mapView setDelegate:self];
+        
+   
 
     }
     
@@ -72,6 +75,22 @@ class MapViewController: UIViewController,CLLocationManagerDelegate,MKMapViewDel
         let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
         
         self.mapView.setRegion(region, animated: true)
+        
+        let userGeoPoint = PFGeoPoint(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+        
+        // Create a query for places
+        var query = PFQuery(className:"User")
+        // Interested in locations near user.
+        query.whereKey("location", nearGeoPoint:userGeoPoint)
+        // Limit what could be a lot of points.
+        query.limit = 10
+        // Final list of objects
+        do {
+            let nearbyPeople = try query.findObjects()
+            print("number of people around you ", nearbyPeople.count)
+        } catch {
+            print(error)
+        }
         
     }
 
