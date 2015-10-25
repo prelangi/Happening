@@ -21,6 +21,7 @@ class ViewController: UIViewController, PFLogInViewControllerDelegate, PFSignUpV
     @IBOutlet weak var doneButton: UIButton!
     
     var objects = [String]()
+    var interestsChecked = [Bool]()
     
     
     override func viewDidLoad() {
@@ -32,6 +33,12 @@ class ViewController: UIViewController, PFLogInViewControllerDelegate, PFSignUpV
         objects.append("Web Development")
         objects.append("Hardware")
         objects.append("Gaming")
+        
+        interestsChecked.append(false);
+        interestsChecked.append(false);
+        interestsChecked.append(false);
+        interestsChecked.append(false);
+        interestsChecked.append(false);
         
 
         
@@ -148,6 +155,23 @@ class ViewController: UIViewController, PFLogInViewControllerDelegate, PFSignUpV
         default :return ""
             break
         }
+        
+    }
+    
+    func tableView(tableView: UITableView,
+        didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if let cell = interestsTableView.cellForRowAtIndexPath(indexPath) {
+            interestsChecked[indexPath.row] = !interestsChecked[indexPath.row]
+            if(interestsChecked[indexPath.row]) {
+                cell.accessoryType = .Checkmark
+            }
+            else {
+                cell.accessoryType = .None
+            }
+            
+        }
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        
         
     }
     

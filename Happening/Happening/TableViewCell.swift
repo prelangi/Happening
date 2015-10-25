@@ -13,6 +13,8 @@ class TableViewCell: UITableViewCell {
     @IBOutlet weak var interestsLabel: UILabel!
     
     @IBOutlet weak var iconView: UIImageView!
+    var checked = false
+    
     
     override func awakeFromNib() {
         super.awakeFromNib()
