@@ -22,6 +22,8 @@ class ViewController: UIViewController, PFLogInViewControllerDelegate, PFSignUpV
     
     var objects = [String]()
     var interestsChecked = [Bool]()
+    var skillsArray = NSMutableArray()
+
     
     
     override func viewDidLoad() {
@@ -44,10 +46,17 @@ class ViewController: UIViewController, PFLogInViewControllerDelegate, PFSignUpV
         
     }
     
+ 
+    
     @IBAction func didToggleActiveSwitch(sender: UISwitch) {
         if sender.on == true {
             PFUser.currentUser()?.setObject(true, forKey: "activeStatus")
-            print("turn on")
+            PFGeoPoint.geoPointForCurrentLocationInBackground {
+                (geoPoint: PFGeoPoint?, error: NSError?) -> Void in
+                if error == nil {
+                    PFUser.currentUser()?.setObject(geoPoint!, forKey: "location")
+                }
+            }
         }
         else {
             PFUser.currentUser()?.setObject(false, forKey: "activeStatus")
@@ -73,17 +82,19 @@ class ViewController: UIViewController, PFLogInViewControllerDelegate, PFSignUpV
         self.presentViewController(logInController, animated:true, completion: nil)
     }
     
-   
-    
-    
     override func viewDidAppear(animated: Bool) {
         if (PFUser.currentUser() == nil) {
             let logInController = PFLogInViewController()
+//            logInController.fields = (PFLogInFields.UsernameAndPassword
+//                | PFLogInFields.Facebook
+//                | PFLogInFields.Twitter)
+//            logInController.facebookPermissions = [ "friends_about_me" ]
             logInController.delegate = self
             logInController.signUpController?.delegate = self
             self.presentViewController(logInController, animated:true, completion: nil)
         }
-        
+        usernameLabel.text = PFUser.currentUser()?.objectForKey("username") as? String
+    
         var currentActiveStatus: Bool? = PFUser.currentUser()?.objectForKey("activeStatus") as? Bool
         if currentActiveStatus == nil {
             PFUser.currentUser()?.setObject(true, forKey: "activeStatus")
@@ -154,10 +165,16 @@ class ViewController: UIViewController, PFLogInViewControllerDelegate, PFSignUpV
             interestsChecked[indexPath.row] = !interestsChecked[indexPath.row]
             if(interestsChecked[indexPath.row]) {
                 cell.accessoryType = .Checkmark
+                
+                skillsArray.addObject(objects[indexPath.row])
+                PFUser.currentUser()?.setObject(skillsArray, forKey: "mySkills")
             }
             else {
                 cell.accessoryType = .None
+                skillsArray.removeObject(objects[indexPath.row])
+                PFUser.currentUser()?.setObject(skillsArray, forKey: "mySkills")
             }
+            PFUser.currentUser()?.saveEventually()
             
         }
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
